@@ -8,14 +8,14 @@ dotenv.config()
 const app = express()
 
 app.use(cors());
-app.use(express.jsson())
+app.use(express.json())
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=> console.log("DB Connected"))
-.catch(()=> console.log(err));
+.catch(err => console.log(err));
 
-const Todo = mongoose.model("Todod", new mongooose.Schema({
-    test: String
+const Todo = mongoose.model("Todo", new mongoose.Schema({
+    text: String
 }));
 
 app.get('/todos', async (req, res) =>{
@@ -23,17 +23,19 @@ app.get('/todos', async (req, res) =>{
 })
 
 app.post('/todos', async(req, res) =>{
-    const todo = await todo.create({
+    const todo = await Todo.create({
         text: req.body.text
     })
     res.json(todo)
 })
 
-app.delete("/todo/:id", async(req, res) =>{
+app.delete("/todos/:id", async(req, res) =>{
     await Todo.findByIdAndDelete(req.params.id)
     res.json({
-        massage: "Deleted"
+        message: "Deleted"
     })
 })
 
-app.listen(process.env.PORT, () )
+app.listen(process.env.PORT, () =>{
+    console.log("Server is running on port 5000")
+})
